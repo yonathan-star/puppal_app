@@ -11,6 +11,7 @@ import 'package:my_new_app/screens/theme.dart';
 import 'package:my_new_app/shared/styled_button.dart';
 import 'package:my_new_app/model/pet_profile.dart';
 import 'package:my_new_app/services/profile_storage.dart';
+import 'package:my_new_app/services/arduino_service.dart';
 
 class BleManagerScreen extends StatefulWidget {
   const BleManagerScreen({super.key});
@@ -131,6 +132,12 @@ class _BleManagerScreenState extends State<BleManagerScreen> {
         _isConnected = true;
         _simulate = false;
       });
+
+      // ADD THIS LINE:
+      ArduinoService.setConnection(
+        conn,
+      ); // Share connection with Arduino service
+
       _appendLog('Connected to ${device.name ?? device.address}');
       _inputSub = conn.input?.listen(_onDataReceived);
       _inputSub?.onDone(() {

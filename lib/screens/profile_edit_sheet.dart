@@ -3,6 +3,7 @@ import 'package:my_new_app/model/pet_profile.dart';
 import 'package:my_new_app/services/food_database.dart';
 import 'package:my_new_app/services/food_estimator.dart';
 import 'package:my_new_app/services/ai_density_service.dart';
+import 'package:my_new_app/services/arduino_service.dart';
 
 class ProfileEditSheet extends StatefulWidget {
   const ProfileEditSheet({super.key, required this.profile});
@@ -93,7 +94,6 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
       _aiLoading = true;
     });
     try {
-      // TODO: set your worker URL here or inject via constructor/settings
       final svc = AiDensityService(
         baseUrl: 'https://puppal-ai-worker.yonathangal12345.workers.dev',
       );
@@ -104,16 +104,21 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
           _selectedBrand = query;
           _selectedDensity = res;
         });
+
+        // Show AI confidence feedback
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('✅ AI found: ${res}g/cup'),
+            duration: Duration(seconds: 3),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('AI lookup failed')));
+        ).showSnackBar(const SnackBar(content: Text('❌ AI lookup failed')));
       }
     } finally {
-      if (mounted)
-        setState(() {
-          _aiLoading = false;
-        });
+      if (mounted) setState(() => _aiLoading = false);
     }
   }
 
@@ -153,29 +158,19 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
               onChanged: _search,
             ),
             const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: _estimateDensity,
-                    child: const Text('Estimate density for this brand'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _aiLoading ? null : _aiLookupOnline,
-                    icon: _aiLoading
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.cloud_outlined),
-                    label: const Text('AI lookup (online)'),
-                  ),
-                ),
-              ],
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _aiLoading ? null : _aiLookupOnline,
+                icon: _aiLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.cloud_outlined),
+                label: const Text('AI lookup (online)'),
+              ),
             ),
             const SizedBox(height: 8),
             SizedBox(
@@ -236,25 +231,56 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
+            ElevatedButton.icon(
+              onPressed: () async {
                 final grams = int.tryParse(_gramsController.text.trim());
-                Navigator.of(context).pop(
-                  PetProfile(
-                    uidHex: widget.profile.uidHex,
-                    type: widget.profile.type,
-                    name: widget.profile.name,
-                    foodType: _foodController.text.trim().isEmpty
-                        ? null
-                        : _foodController.text.trim(),
-                    gramsPerDay: grams,
-                    foodBrand: _selectedBrand,
-                    foodDensityGramsPerCup: _selectedDensity,
-                    allowedWindows: _windows,
-                  ),
+                final updatedProfile = PetProfile(
+                  uidHex: widget.profile.uidHex,
+                  type: widget.profile.type,
+                  name: widget.profile.name,
+                  foodType: _foodController.text.trim().isEmpty
+                      ? null
+                      : _foodController.text.trim(),
+                  gramsPerDay: grams,
+                  foodBrand: _selectedBrand,
+                  foodDensityGramsPerCup: _selectedDensity,
+                  allowedWindows: _windows,
                 );
+
+                // Send metadata to Arduino if we have the required data
+                if (grams != null && _selectedDensity != null) {
+                  try {
+                    await ArduinoService.setMetadata(
+                      widget.profile.uidHex,
+                      grams,
+                      _selectedDensity!,
+                    );
+
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('✅ Arduino updated successfully'),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('⚠️ Arduino sync failed: $e')),
+                      );
+                    }
+                  }
+                }
+
+                if (mounted) {
+                  Navigator.of(context).pop(updatedProfile);
+                }
               },
-              child: const Text('Save'),
+              icon: const Icon(Icons.sync),
+              label: const Text('Save & Sync to Arduino'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(16),
+              ),
             ),
           ],
         ),
