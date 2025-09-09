@@ -1,118 +1,105 @@
-PupPal App
+<p align="center">
+  <img src="assets/readme/social-preview.png" alt="PupPal banner" width="100%" />
+</p>
 
-Cross-platform Flutter app for managing pet care, with room for on-device “local AI” helpers and optional backend/firmware components. The repository includes a standard Flutter mobile app (lib/ + platform folders), a cloudflare_worker/ directory for an edge/backend worker, and Arduino/C++ sources (for hardware integration) committed in history. 
-GitHub
+<h1 align="center">PupPal 🐾</h1>
+<p align="center">
+  A Flutter app for pet care—feeding guidance, device control, and optional local AI helpers.
+</p>
 
-Table of contents
+<p align="center">
+  <a href="https://github.com/yonathan-star/puppal_app/stargazers">
+    <img alt="Stars" src="https://img.shields.io/github/stars/yonathan-star/puppal_app?style=flat&color=FFD166">
+  </a>
+  <img alt="Flutter" src="https://img.shields.io/badge/Flutter-stable-02569B?logo=flutter&logoColor=white">
+  <img alt="Android" src="https://img.shields.io/badge/Android-Pixel_Ready-3DDC84?logo=android&logoColor=white">
+  <img alt="Platforms" src="https://img.shields.io/badge/Platforms-Android%20%7C%20iOS%20%7C%20Web-lightgrey">
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-informational"></a>
+</p>
 
-Features
+---
 
-Roadmap
+## ✨ Features
+- **Feeding Estimator (Local)**: weight + breed → grams/day using standard RER/MER formulas (offline).
+- **Extensible**: optional Cloudflare Worker for server tasks; room for BLE/Serial device control.
+- **Flutter scaffold**: runs on Android (Pixel), iOS, and Web.
 
-Repository layout
+> **Note**: The estimator is guidance only—always confirm with a veterinarian.
 
-Prerequisites
+---
 
-Getting started
+## 🗂️ Repository Layout
 
-Running on a Google Pixel (Android)
-
-Build & release
-
-Configuration
-
-Backend (Cloudflare Worker)
-
-Hardware / Firmware
-
-Testing
-
-Contributing
-
-License
-
-Features
-
-Current:
-
-Flutter app scaffold with Android, iOS, Web, Windows, macOS, and Linux targets. 
-GitHub
-
-assets/ and test/ set up for app content and unit tests. 
-GitHub
-
-Planned (suggested next steps):
-
-Local (offline) feeding estimator: weight + breed → daily grams (RER/MER-based).
-
-Bluetooth UID manager for tags/cards (add/remove/list).
-
-Device dashboard (status, test actions).
-
-Optional AI “Explain” helper (on-device or via Worker).
-
-Tip: keep “Current” vs “Planned” in sync with what’s actually merged.
-
-Repository layout
 puppal_app/
-├─ lib/                    # Flutter application code
-├─ assets/                 # Images/fonts/etc.
-├─ test/                   # Unit/widget tests
-├─ cloudflare_worker/      # Edge/backend worker (TypeScript)
-├─ android/ ios/ web/ …    # Platform-specific Flutter targets
-└─ README.md               # You are here
+├─ lib/ # Flutter application code
+├─ assets/readme/ # Images used in this README (screenshots, banner)
+├─ cloudflare_worker/ # Optional edge/backend worker (TypeScript)
+├─ android/ ios/ web/ … # Platform targets
+└─ README.md
 
 
-Languages by GitHub stats show Dart + C++ (Arduino) + TypeScript among others, which matches the app + worker + firmware split. 
-GitHub
+---
 
-Prerequisites
+## 📸 Screenshots
+<p align="center">
+  <img src="assets/readme/home.png" alt="Home screen" width="45%" />
+  <img src="assets/readme/calculator.png" alt="Feeding calculator" width="45%" />
+</p>
 
-Flutter SDK (stable channel) and Dart
+<details>
+  <summary>See demo GIF</summary>
+  <p align="center">
+    <img src="assets/readme/demo.gif" alt="App demo" width="70%" />
+  </p>
+</details>
 
-Android Studio with Android SDK + platform tools (for Pixel)
+---
 
-(Optional) Node.js + Wrangler if you deploy the Cloudflare worker
+## 🚀 Getting Started
 
-(Optional) Arduino IDE or PlatformIO if you work on firmware
+### Prereqs
+- Flutter SDK (stable), Dart
+- For Android (Pixel): Android SDK + USB debugging enabled
 
-Official Flutter setup docs are here if you need them. 
-GitHub
-
-Getting started
-
-Clone:
-
+### Install & run
+```bash
 git clone https://github.com/yonathan-star/puppal_app.git
 cd puppal_app
-
-
-Install deps:
-
 flutter pub get
+flutter run
 
-
-Run the app (pick your target below).
-
-Running on a Google Pixel (Android)
-
-On your Pixel: Settings → About phone → Build number (tap 7×) → back → Developer options → USB debugging = On.
-
-Connect via USB and trust the computer.
-
-Verify the device:
-
+If you have a Pixel plugged in:
 flutter devices
+flutter run -d <pixel_device_id>
 
+🧠 Local Feeding Estimator (optional module)
 
-Run:
+This repo supports a local, offline feeding estimator based on veterinary formulas:
+RER = 70 × (kg^0.75)
+MER = RER × factor (species, age, neuter, activity, breed bias, BCS)
+Grams/day = MER_kcal / kcal_per_gram
+Suggested integration (example files):
+Logic: lib/ai/local_feeding_ai.dart
+UI page: lib/pages/feeding_calculator_page.dart
+Open from any screen:
 
-flutter run -d <device_id>
+import 'package:puppal_app/pages/feeding_calculator_page.dart';
+final grams = await showFeedingCalculator(context);
 
+☁️ Optional: Cloudflare Worker
 
-If you see multiple devices, pick the Pixel’s device_id from flutter devices.
+If you want a lightweight backend:
 
-Build & release
+cd cloudflare_worker
+npm i
+npx wrangler login
+npx wrangler deploy
+
+🧪 Testing
+
+flutter test
+
+📦 Build
 
 Android:
 
@@ -121,74 +108,16 @@ flutter build apk --release
 flutter build appbundle --release
 
 
-iOS (on macOS with Xcode):
+iOS (on macOS):
 
 flutter build ios --release
 
 
-Web (optional):
+Web:
 
 flutter build web
 
-Configuration
-
-Typical places you’ll adjust values:
-
-App name, icons, and package IDs in platform folders (android/app/, ios/Runner/, etc.). 
-GitHub
-
-Any feature flags or constants you add under lib/ (e.g., for local-AI settings, Bluetooth commands, etc.).
-
-Backend (Cloudflare Worker)
-
-A cloudflare_worker/ directory exists for an edge/backend worker (TypeScript). If you choose to use it:
-
-Install dependencies & login:
-
-cd cloudflare_worker
-npm i
-npx wrangler login
-
-
-Configure wrangler.toml and any environment variables you need.
-
-Deploy:
-
-npx wrangler deploy
-
-
-If you’re keeping the app 100% offline (“local AI”), you can ignore the worker and ship the Flutter app alone. 
-GitHub
-
-Hardware / Firmware
-
-The repo history includes Arduino/C++ sources (e.g., for ESP32 or similar), which you can pair with the app for feeders, doors, or sensors. Build the firmware in Arduino IDE/PlatformIO and define a simple serial/BLE protocol the app can call (e.g., GETUIDLIST, SET_GPD:<grams>). 
-GitHub
-
-Testing
-
-Run Flutter tests:
-
-flutter test
-
-
-Add widget and unit tests under test/.
-
-Contributing
-
+🤝 Contributing
 Create a feature branch: git checkout -b feature/<name>
-
 Commit with clear messages
-
-Open a PR with a summary, screenshots (if UI), and test notes
-
-License
-
-Choose and add a license file (e.g., MIT/Apache-2.0). If none is added, default GitHub behavior is “all rights reserved.”
-
-Maintainer notes
-
-The default README currently in the repo is the Flutter starter; replace it with this file to better reflect the project scope. 
-GitHub
-
-If you want, I can tailor this further to match your exact package name from pubspec.yaml, add badges, and include concrete “Usage” docs for the feeding estimator once you merge that page.
+Open a PR with summary, screenshots/GIF if UI, and test notes
