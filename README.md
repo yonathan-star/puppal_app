@@ -52,7 +52,7 @@ puppal_app/
   <a href="assets/readme/calculator-2.png"><img src="assets/readme/calculator-2.png" alt="Estimator (details)" width="280"></a>
 </p>
 <p align="center">
-  <img src="assets/readme/demo.gif" alt="App demo" width="420">
+  <img src="assets/readme/demo.gif" alt="App demo" width="280">
 </p>
 
 ---
@@ -122,6 +122,7 @@ flutter build web
 Create a feature branch: git checkout -b feature/<name>
 Commit with clear messages
 Open a PR with summary, screenshots/GIF if UI, and test notes
+
 
 
 
