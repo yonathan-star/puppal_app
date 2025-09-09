@@ -30,6 +30,9 @@
 
 ## 🗂️ Repository Layout
 
+## Repository Layout
+
+```text
 puppal_app/
 ├─ lib/
 ├─ assets/
@@ -141,6 +144,7 @@ flutter build web
 Create a feature branch: git checkout -b feature/<name>
 Commit with clear messages
 Open a PR with summary, screenshots/GIF if UI, and test notes
+
 
 
 
