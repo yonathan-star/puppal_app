@@ -74,13 +74,13 @@ cd puppal_app
 flutter pub get
 flutter run
 
-If you have a Pixel plugged in:
+### If you have a Pixel plugged in:
 flutter devices
 flutter run -d <pixel_device_id>
 
-🧠 Local Feeding Estimator (optional module)
+### 🧠 Local Feeding Estimator (optional module)
 
-This repo supports a local, offline feeding estimator based on veterinary formulas:
+### This repo supports a local, offline feeding estimator based on veterinary formulas:
 RER = 70 × (kg^0.75)
 MER = RER × factor (species, age, neuter, activity, breed bias, BCS)
 Grams/day = MER_kcal / kcal_per_gram
@@ -92,34 +92,34 @@ Open from any screen:
 import 'package:puppal_app/pages/feeding_calculator_page.dart';
 final grams = await showFeedingCalculator(context);
 
-☁️ Optional: Cloudflare Worker
+### ☁️ Optional: Cloudflare Worker
 
-If you want a lightweight backend:
+### If you want a lightweight backend:
 
 cd cloudflare_worker
 npm i
 npx wrangler login
 npx wrangler deploy
 
-🧪 Testing
+### 🧪 Testing
 
 flutter test
 
-📦 Build
+### 📦 Build
 
-Android:
+### Android:
 
 flutter build apk --release
 # or
 flutter build appbundle --release
 
 
-iOS (on macOS):
+### iOS (on macOS):
 
 flutter build ios --release
 
 
-Web:
+### Web:
 
 flutter build web
 
@@ -127,4 +127,5 @@ flutter build web
 Create a feature branch: git checkout -b feature/<name>
 Commit with clear messages
 Open a PR with summary, screenshots/GIF if UI, and test notes
+
 
