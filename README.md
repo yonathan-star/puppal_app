@@ -51,6 +51,8 @@ puppal_app/
 
 ---
 
+## GIF of the App
+
 <p align="center">
   <img src="assets/readme/demo.gif" alt="App demo" width="230">
 </p>
@@ -122,6 +124,7 @@ flutter build web
 Create a feature branch: git checkout -b feature/<name>
 Commit with clear messages
 Open a PR with summary, screenshots/GIF if UI, and test notes
+
 
 
 
