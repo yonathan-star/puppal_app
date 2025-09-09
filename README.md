@@ -31,10 +31,27 @@
 ## 🗂️ Repository Layout
 
 puppal_app/
-├─ lib/ # Flutter application code
-├─ assets/readme/ # Images used in this README (screenshots, banner)
-├─ cloudflare_worker/ # Optional edge/backend worker (TypeScript)
-├─ android/ ios/ web/ … # Platform targets
+├─ lib/
+├─ assets/
+│  └─ readme/
+│     ├─ social-preview.png
+│     ├─ home.png
+│     ├─ calculator.png
+│     ├─ calculator-2.png
+│     └─ bluetooth.png
+├─ cloudflare_worker/
+├─ android/
+├─ ios/
+├─ web/
+├─ linux/
+├─ macos/
+├─ windows/
+├─ test/
+├─ pubspec.yaml
+├─ pubspec.lock
+├─ analysis_options.yaml
+├─ .gitignore
+├─ .metadata
 └─ README.md
 
 
@@ -124,6 +141,7 @@ flutter build web
 Create a feature branch: git checkout -b feature/<name>
 Commit with clear messages
 Open a PR with summary, screenshots/GIF if UI, and test notes
+
 
 
 
