@@ -46,10 +46,7 @@ puppal_app/
   <a href="assets/readme/home.png"><img src="assets/readme/home.png" alt="Home screen" width="280"></a>
   <a href="assets/readme/calculator.png"><img src="assets/readme/calculator.png" alt="Feeding estimator" width="280"></a>
   <a href="assets/readme/bluetooth.png"><img src="assets/readme/bluetooth.png" alt="Bluetooth manager" width="280"></a>
-</p>
-
-<p align="center">
-  <a href="assets/readme/calculator-2.png"><img src="assets/readme/calculator-2.png" alt="Estimator (details)" width="280"></a>
+   <a href="assets/readme/calculator-2.png"><img src="assets/readme/calculator-2.png" alt="Estimator (details)" width="280"></a>
 </p>
 <p align="center">
   <img src="assets/readme/demo.gif" alt="App demo" width="280">
@@ -122,6 +119,7 @@ flutter build web
 Create a feature branch: git checkout -b feature/<name>
 Commit with clear messages
 Open a PR with summary, screenshots/GIF if UI, and test notes
+
 
 
 
