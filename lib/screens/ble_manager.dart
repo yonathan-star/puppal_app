@@ -372,13 +372,17 @@ class _BleManagerScreenState extends State<BleManagerScreen> {
                           color: AppColors.titleColor,
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          _isAndroid
-                              ? (_isDiscovering
-                                    ? 'Scanning...'
-                                    : 'Scan Devices')
-                              : 'Scan (Android only)',
-                          style: Theme.of(context).textTheme.headlineMedium,
+                        Flexible(
+                          child: Text(
+                            _isAndroid
+                                ? (_isDiscovering
+                                      ? 'Scanning...'
+                                      : 'Scan Devices')
+                                : 'Scan (Android only)',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
