@@ -60,6 +60,7 @@ puppal_app/
 
 ---
 
+
 <h2 align="center">📸 Screenshots</h2>
 
 <p align="center">
@@ -144,6 +145,7 @@ flutter build web
 Create a feature branch: git checkout -b feature/<name>
 Commit with clear messages
 Open a PR with summary, screenshots/GIF if UI, and test notes
+
 
 
 
