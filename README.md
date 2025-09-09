@@ -40,24 +40,20 @@ puppal_app/
 
 ---
 
-## 📸 Screenshots
-<p align="center">
-  <img src="assets/readme/home.png" alt="Home screen" width="45%" />
-  <img src="assets/readme/calculator.png" alt="Feeding estimator" width="45%" />
-</p>
-
-<details>
-  <summary>More views</summary>
-  <p align="center">
-    <img src="assets/readme/calculator-2.png" alt="Estimator (details)" width="45%" />
-    <img src="assets/readme/bluetooth.png" alt="Bluetooth manager" width="45%" />
-  </p>
-</details>
+<h2 align="center">📸 Screenshots</h2>
 
 <p align="center">
-  <img src="assets/readme/demo.gif" alt="App demo" width="60%" />
+  <a href="assets/readme/home.png"><img src="assets/readme/home.png" alt="Home screen" width="280"></a>
+  <a href="assets/readme/calculator.png"><img src="assets/readme/calculator.png" alt="Feeding estimator" width="280"></a>
+  <a href="assets/readme/bluetooth.png"><img src="assets/readme/bluetooth.png" alt="Bluetooth manager" width="280"></a>
 </p>
 
+<p align="center">
+  <a href="assets/readme/calculator-2.png"><img src="assets/readme/calculator-2.png" alt="Estimator (details)" width="280"></a>
+</p>
+<p align="center">
+  <img src="assets/readme/demo.gif" alt="App demo" width="420">
+</p>
 
 ---
 
@@ -79,7 +75,6 @@ flutter devices
 flutter run -d <pixel_device_id>
 
 ### 🧠 Local Feeding Estimator (optional module)
-
 ### This repo supports a local, offline feeding estimator based on veterinary formulas:
 RER = 70 × (kg^0.75)
 MER = RER × factor (species, age, neuter, activity, breed bias, BCS)
@@ -127,5 +122,6 @@ flutter build web
 Create a feature branch: git checkout -b feature/<name>
 Commit with clear messages
 Open a PR with summary, screenshots/GIF if UI, and test notes
+
 
 
