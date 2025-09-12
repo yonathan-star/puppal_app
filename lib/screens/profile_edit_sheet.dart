@@ -433,18 +433,21 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                   _gramsController.text = result.gramsPerDay.round().toString();
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('AI Estimate'),
                     content: Text(
                       'AI estimate: ${result.gramsPerDay.round()} grams/day',
                       textAlign: TextAlign.center,
-                      style: textTheme.bodyLarge?.copyWith(fontSize: 18),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18),
                     ),
-                    duration: const Duration(seconds: 3),
-                    behavior: SnackBarBehavior.floating,
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(),
+                        child: const Text('OK'),
+                      ),
+                    ],
                   ),
                 );
               },
