@@ -1,0 +1,11 @@
+[
+  { "brand": "Purina Pro Plan Adult Chicken & Rice", "density_g_per_cup": 108 },
+  { "brand": "Hill's Science Diet Adult Large Breed", "density_g_per_cup": 120 },
+  { "brand": "Blue Buffalo Life Protection Adult", "density_g_per_cup": 105 },
+  { "brand": "Royal Canin Medium Adult", "density_g_per_cup": 110 },
+  { "brand": "Orijen Original", "density_g_per_cup": 125 },
+  { "brand": "Acana Prairie Poultry", "density_g_per_cup": 115 },
+  { "brand": "Taste of the Wild High Prairie", "density_g_per_cup": 110 },
+  { "brand": "Kirkland Signature Chicken & Rice", "density_g_per_cup": 112 }
+]
+
