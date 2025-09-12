@@ -106,11 +106,22 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
           _selectedDensity = res;
         });
 
-        // Show AI confidence feedback
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('✅ AI found: ${res}g/cup'),
-            duration: Duration(seconds: 3),
+        // Show AI confidence feedback as Dialog
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('AI Estimate'),
+            content: Text(
+              'AI estimate: ${res}g/cup',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text('OK'),
+              ),
+            ],
           ),
         );
       } else {
@@ -197,7 +208,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              initialValue: _species,
+              value: _species,
               items: const [
                 DropdownMenuItem(value: 'dog', child: Text('Dog')),
                 DropdownMenuItem(value: 'cat', child: Text('Cat')),
@@ -310,7 +321,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
               ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              initialValue: _ageStage,
+              value: _ageStage,
               items: const [
                 DropdownMenuItem(
                   value: 'puppyKitten',
@@ -395,8 +406,8 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                   ageStage: _ageStage == 'puppyKitten'
                       ? AgeStage.puppyKitten
                       : _ageStage == 'senior'
-                      ? AgeStage.senior
-                      : AgeStage.adult,
+                          ? AgeStage.senior
+                          : AgeStage.adult,
                   neutered: _neutered,
                   activityLevel: _activity,
                   bcs: _bcs,
@@ -406,12 +417,22 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                 setState(() {
                   _gramsController.text = result.gramsPerDay.round().toString();
                 });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                // Show grams/day estimate as Dialog
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('AI Estimate'),
                     content: Text(
                       'AI estimate: ${result.gramsPerDay.round()} grams/day',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18),
                     ),
-                    duration: Duration(seconds: 3),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(),
+                        child: const Text('OK'),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -637,14 +658,25 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
     TimeOfDay start = const TimeOfDay(hour: 8, minute: 0);
     TimeOfDay end = const TimeOfDay(hour: 18, minute: 0);
 
+    final ThemeData pickerTheme = Theme.of(context).copyWith(
+      timePickerTheme: const TimePickerThemeData(
+        dialTextStyle: TextStyle(fontSize: 20),
+        dayPeriodTextStyle: TextStyle(fontSize: 20), // AM/PM style
+        hourMinuteTextStyle: TextStyle(fontSize: 20),
+        helpTextStyle: TextStyle(fontSize: 18),
+      ),
+    );
+
     TimeOfDay? pickedStart = await showTimePicker(
       context: context,
       initialTime: start,
+      builder: (ctx, child) => Theme(data: pickerTheme, child: child!),
     );
     if (pickedStart == null) return null;
     TimeOfDay? pickedEnd = await showTimePicker(
       context: context,
       initialTime: end,
+      builder: (ctx, child) => Theme(data: pickerTheme, child: child!),
     );
     if (pickedEnd == null) return null;
 
