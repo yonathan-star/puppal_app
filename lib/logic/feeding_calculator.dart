@@ -13,9 +13,9 @@ class FeedingCalculator {
 
     final breedLower = breed.toLowerCase();
     if (isDog) {
-      if (breedLower.contains('chihuahua'))
+      if (breedLower.contains('chihuahua')) {
         gramsPerKg = 16.0;
-      else if (breedLower.contains('labrador'))
+      } else if (breedLower.contains('labrador'))
         gramsPerKg = 14.0;
       else if (breedLower.contains('poodle'))
         gramsPerKg = 13.0;
@@ -24,9 +24,9 @@ class FeedingCalculator {
         gramsPerKg = 11.0;
     } else {
       // Cat light adjustments
-      if (breedLower.contains('siamese'))
+      if (breedLower.contains('siamese')) {
         gramsPerKg = 42.0;
-      else if (breedLower.contains('maine coon'))
+      } else if (breedLower.contains('maine coon'))
         gramsPerKg = 48.0;
     }
 

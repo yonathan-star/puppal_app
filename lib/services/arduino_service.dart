@@ -64,7 +64,7 @@ class ArduinoService {
         throw Exception('No active Bluetooth connection to Arduino');
       }
 
-      _connection!.output.add(utf8.encode(command + '\n'));
+      _connection!.output.add(utf8.encode('$command\n'));
       await _connection!.output.allSent;
 
       print('✅ Sent to Arduino: $command');

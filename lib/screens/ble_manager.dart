@@ -91,8 +91,9 @@ class _BleManagerScreenState extends State<BleManagerScreen> {
   }
 
   Future<void> _startDiscovery() async {
-    if (_simulate || !_isAndroid)
+    if (_simulate || !_isAndroid) {
       return; // disabled in simulator or non-Android
+    }
     await _ensureEnabled();
     setState(() {
       _scanResults = [];
@@ -264,14 +265,14 @@ class _BleManagerScreenState extends State<BleManagerScreen> {
     }
     if (_connection == null || !_isConnected) return;
     try {
-      if (text == '0')
+      if (text == '0') {
         _pendingAddType = 'dog';
-      else if (text == '1')
+      } else if (text == '1')
         _pendingAddType = 'cat';
       else
         _pendingAddType = null;
 
-      _connection!.output.add(utf8.encode(text + "\n"));
+      _connection!.output.add(utf8.encode("$text\n"));
       await _connection!.output.allSent;
       _appendLog('> $text');
     } catch (e) {

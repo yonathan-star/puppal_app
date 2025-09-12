@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:puppal_app/model/pet_profile.dart';
-import 'package:puppal_app/services/food_database.dart';
-import 'package:puppal_app/services/ai_density_service.dart';
-import 'package:puppal_app/services/arduino_service.dart';
-import 'package:puppal_app/ai/local_feeding_ai.dart';
-import 'package:puppal_app/services/breed_lookup_service.dart';
-import 'package:puppal_app/services/profile_storage.dart';
+import 'package:my_new_app/model/pet_profile.dart';
+import 'package:my_new_app/services/food_database.dart';
+import 'package:my_new_app/services/ai_density_service.dart';
+import 'package:my_new_app/services/arduino_service.dart';
+import 'package:my_new_app/ai/local_feeding_ai.dart';
+import 'package:my_new_app/services/breed_lookup_service.dart';
 
 class ProfileEditSheet extends StatefulWidget {
   const ProfileEditSheet({super.key, required this.profile});
@@ -22,7 +21,6 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
   late TextEditingController _brandSearchController;
   // Add controllers for weight, breed, age, neuter, activity, BCS
   late TextEditingController _weightController;
-  late TextEditingController _breedController;
   String _species = 'dog';
   String _breed = 'Mixed/Unknown';
   String _ageStage = 'adult';
@@ -51,17 +49,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
     _brandSearchController = TextEditingController(
       text: widget.profile.foodBrand ?? '',
     );
-    _weightController = TextEditingController(
-      text: widget.profile.weightLb?.toString() ?? '',
-    );
-    _species = (widget.profile.type == 'cat') ? 'cat' : 'dog';
-    _breed = widget.profile.breed ?? 'Mixed/Unknown';
-    _breedController = TextEditingController(text: _breed);
-    _ageStage = widget.profile.ageStage ?? 'adult';
-    _neutered = widget.profile.neutered ?? true;
-    _activity = widget.profile.activity ?? 3;
-    _bcs = widget.profile.bcs ?? 5;
-
+    _weightController = TextEditingController();
     _selectedBrand = widget.profile.foodBrand;
     _selectedDensity = widget.profile.foodDensityGramsPerCup;
     _windows = List.of(widget.profile.allowedWindows ?? const []);
@@ -81,7 +69,6 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
     _foodController.dispose();
     _gramsController.dispose();
     _brandSearchController.dispose();
-    _breedController.dispose();
     super.dispose();
   }
 
@@ -198,7 +185,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
               controller: _weightController,
               style: inputTextStyle,
               decoration: InputDecoration(
-                labelText: 'Weight (lb)',
+                labelText: 'Weight (kg)',
                 labelStyle: labelStyle,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -210,17 +197,12 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: _species,
+              initialValue: _species,
               items: const [
                 DropdownMenuItem(value: 'dog', child: Text('Dog')),
                 DropdownMenuItem(value: 'cat', child: Text('Cat')),
               ],
-              onChanged: (v) => setState(() {
-                _species = v!;
-                _breed = 'Mixed/Unknown';
-                _breedController.text = _breed;
-                _confirmedBreed = null;
-              }),
+              onChanged: (v) => setState(() => _species = v!),
               decoration: InputDecoration(
                 labelText: 'Species',
                 labelStyle: labelStyle,
@@ -234,7 +216,6 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
             ),
             const SizedBox(height: 12),
             TextField(
-              controller: _breedController,
               style: inputTextStyle,
               decoration: InputDecoration(
                 labelText: 'Breed',
@@ -245,10 +226,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                 ),
                 border: const OutlineInputBorder(),
               ),
-              onChanged: (v) => setState(() {
-                _breed = v;
-                _confirmedBreed = null;
-              }),
+              onChanged: (v) => setState(() => _breed = v),
               onSubmitted: (v) async {
                 final localList = _species == 'dog'
                     ? LocalFeedingAI.dogBreeds
@@ -289,7 +267,6 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                       setState(() {
                         _breed = match.name;
                         _confirmedBreed = match.name;
-                        _breedController.text = match.name;
                       });
                     }
                   } else {
@@ -314,7 +291,6 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                 } else {
                   setState(() {
                     _confirmedBreed = v;
-                    _breedController.text = v;
                   });
                 }
               },
@@ -334,7 +310,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
               ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: _ageStage,
+              initialValue: _ageStage,
               items: const [
                 DropdownMenuItem(
                   value: 'puppyKitten',
@@ -403,10 +379,8 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
               label: const Text('Estimate Grams (AI)'),
               style: buttonStyle,
               onPressed: () {
-                final weightLb =
-                    double.tryParse(_weightController.text.trim()) ??
-                    22.0; // default ~10kg
-                final weightKg = weightLb * 0.45359237;
+                final weight =
+                    double.tryParse(_weightController.text.trim()) ?? 10.0;
                 final foodProfile = FoodProfile(
                   kcalPerGram: null,
                   kcalPerCup: null,
@@ -414,7 +388,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                 );
                 final input = FeedingInput(
                   species: _species == 'dog' ? Species.dog : Species.cat,
-                  weightKg: weightKg,
+                  weightKg: weight,
                   breedKey:
                       _confirmedBreed ??
                       (_breed.isEmpty ? 'Mixed/Unknown' : _breed),
@@ -592,10 +566,9 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
             ElevatedButton.icon(
               onPressed: () async {
                 final grams = int.tryParse(_gramsController.text.trim());
-                final weightLb = double.tryParse(_weightController.text.trim());
                 final updatedProfile = PetProfile(
                   uidHex: widget.profile.uidHex,
-                  type: _species,
+                  type: widget.profile.type,
                   name: widget.profile.name,
                   foodType: _foodController.text.trim().isEmpty
                       ? null
@@ -604,25 +577,19 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                   foodBrand: _selectedBrand,
                   foodDensityGramsPerCup: _selectedDensity,
                   allowedWindows: _windows,
-                  weightLb: weightLb,
-                  breed: (_confirmedBreed ?? _breedController.text).trim(),
-                  ageStage: _ageStage,
-                  neutered: _neutered,
-                  activity: _activity,
-                  bcs: _bcs,
                 );
-                // Always save locally
-                await ProfileStorage.upsert(updatedProfile);
-
-                // Sync only if connected
-                if (ArduinoService.isConnected) {
+                if (grams != null && _selectedDensity != null) {
                   try {
-                    await ArduinoService.syncProfile(updatedProfile);
+                    await ArduinoService.setMetadata(
+                      widget.profile.uidHex,
+                      grams,
+                      _selectedDensity!,
+                    );
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
-                            '✅ Saved & synced to device',
+                            '✅ Arduino updated successfully',
                             textAlign: TextAlign.center,
                           ),
                           duration: Duration(seconds: 3),
@@ -639,7 +606,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            '⚠️ Saved locally. Sync failed: $e',
+                            '⚠️ Arduino sync failed: $e',
                             textAlign: TextAlign.center,
                           ),
                           duration: const Duration(seconds: 3),
@@ -651,23 +618,6 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                         ),
                       );
                     }
-                  }
-                } else {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          '💾 Saved locally. Connect to device to sync.',
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: Duration(seconds: 3),
-                        behavior: SnackBarBehavior.floating,
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
-                      ),
-                    );
                   }
                 }
                 if (mounted) {
