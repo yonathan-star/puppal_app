@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_new_app/model/pet_profile.dart';
-import 'package:my_new_app/services/food_database.dart';
-import 'package:my_new_app/services/ai_density_service.dart';
-import 'package:my_new_app/services/arduino_service.dart';
-import 'package:my_new_app/ai/local_feeding_ai.dart';
-import 'package:my_new_app/services/breed_lookup_service.dart';
+import 'package:puppal_app/model/pet_profile.dart';
+import 'package:puppal_app/services/food_database.dart';
+import 'package:puppal_app/services/ai_density_service.dart';
+import 'package:puppal_app/services/arduino_service.dart';
+import 'package:puppal_app/ai/local_feeding_ai.dart';
+import 'package:puppal_app/services/breed_lookup_service.dart';
 
 class ProfileEditSheet extends StatefulWidget {
   const ProfileEditSheet({super.key, required this.profile});
@@ -407,21 +407,11 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                   _gramsController.text = result.gramsPerDay.round().toString();
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
-                  showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('AI Estimate'),
+                  SnackBar(
                     content: Text(
                       'AI estimate: ${result.gramsPerDay.round()} grams/day',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18),
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(ctx).pop(),
-                        child: const Text('OK'),
-                      ),
-                    ],
+                    duration: Duration(seconds: 3),
                   ),
                 );
               },
